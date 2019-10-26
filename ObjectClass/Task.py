@@ -9,7 +9,6 @@ class Task:
         self.activeEmployees = activeEmployees
         self.description = description
         self.priority = priority
-        self.assigned = assigned
 
     def __str__ (self):
         print ("Task: \n   Name:            ", self.name,
@@ -19,6 +18,5 @@ class Task:
                      "\n   Difficulty:      ", self.difficulty,
                      "\n   Length:          ", self.length,
                      "\n   Active Employee: ", self.activeEmployees,
-                     "\n   Priority:        ", self.priority,
-                     "\n   Assigned:        ", self.assigned,
+                     "\n   Priority:        ", self.priority
                )
