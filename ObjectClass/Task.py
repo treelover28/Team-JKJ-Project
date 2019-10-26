@@ -11,7 +11,7 @@ class Task:
         self.priority = priority
         self.assigned = assigned
 
-    def __str__ (self)
+    def __str__ (self):
         print ("Task: \n   Name:            ", self.name,
                      "\n   Description:     ", self.description,
                      "\n   Department:      ", self.department,
