@@ -1,4 +1,6 @@
-class PriorityQueueSet(object):
+import heapq
+
+class PriorityQueue(object):
 
     """
     Combined priority queue and set data structure.
