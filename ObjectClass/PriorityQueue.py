@@ -23,25 +23,16 @@ class PriorityQueue(object):
             items (list): An initial item list - it can be unsorted and
                 non-unique. The data structure will be created in O(N).
         """
-        self.set = dict((item, True) for item in items)
-        self.heap = self.set.keys()
+        self.heap = items
         heapq.heapify(self.heap)
-
-    def hasItem(self, item):
-        """Check if ``item`` exists in the queue."""
-        return item in self.set
 
     def pop(self):
         """Remove and return the smallest item from the queue."""
         smallest = heapq.heappop(self.heap)
-        del self.set[smallest]
         return smallest
 
     def add(self, item):
-        """Add ``item`` to the queue if doesn't already exist."""
-        if item not in self.set:
-            self.set[item] = True
-            heapq.heappush(self.heap, item)
+        heapq.heappush(self.heap, item)
 
     """
     PriorityQueue data structure code taken from Stack Overflow
