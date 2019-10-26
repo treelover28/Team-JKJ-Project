@@ -1,1 +1,6 @@
 # Team-JKJ-Project
+# Project Name
+## What problem does my app solve?
+Most entrepreneurs when starting their business usually face the difficulty of managing employees to make the business function properly. Specifically, startups usually have their employees with different skillsets working in multiple departments, and it is difficult to efficiently assign jobs to the correct employees, especially when the task requires a large number of skillsets and multiple employees to finish. <br />
+## How does my app solve the problem?
+Name is an employee management application that aims to efficiently assign current tasks to available employees and report back to the employer. Specifically, the program takes in a database containing information (department, skillset, and current active tasks) of available employees. The program also takes in a list of task which containing the description, the difficulty, the length, the description, the department, and the skillset required. The algorithm will process the information and use priority queues to assign the perfect employees for each task so that everybody should have the same amount of work and also be suitable for their assigned tasks.
