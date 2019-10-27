@@ -8,6 +8,8 @@ from settings import employees_schema
 from settings import tasks_schema
 from client import client
 
+connection = client()
+
 HEIGHT = 700
 WIDTH = 1200
 #create the window
@@ -96,8 +98,9 @@ def addEmp():
         listSkill.append(list2.get(i))
     cap = entry3.get()
     emp = Employee(empFName, empLName, listDep, listSkill, cap)
+    connection.post_employee(connection, emp)
     list32.delete(0, tk.END)
-    for q in range(10):
+    for q in connection.get_all_employees(connection):
         list32.insert(tk.END, q)
     entry1.delete(0, tk.END)
     entry2.delete(0, tk.END)
@@ -187,11 +190,12 @@ def addTask():
     for i in listIndex:
         listSkill.append(list22.get(i))
     task = Task(taskName, listDep, listSkill, diff, l, descript, priority, empNeeded)
+    connection.post_tasks(connection,task)
     list31.delete(0, tk.END)
-    for q in range(10):
+    for q in connection.get_all_tasks(connection, 0):
         list31.insert(tk.END, q)
     list41.delete(0,tk.END)
-    for q in range(10):
+    for q in connection.get_all_tasks(connection,0):
         list41.insert(tk.END, q)
     entry21.delete(0, tk.END)
     entry24.delete(0, tk.END)
@@ -218,9 +222,9 @@ list31.configure(yscrollcommand = scroll31.set)
 list31.place (x = 110, y = 45, height = 150, width = 250)
 scroll31.place(x=335, y =45, height = 150, width =25)
 
-connection = client()
 
-for q in connection.get_all_tasks():
+
+for q in connection.get_all_tasks(connection):
     list31.insert(tk.END, q)
 
 
@@ -232,7 +236,7 @@ list32.configure(yscrollcommand = scroll32.set)
 list32.place (x = 110, y = 200, height = 150, width = 250)
 scroll32.place(x=335, y =200, height = 150, width =25)
 
-for q in client.get_all_employees():
+for q in connection.get_all_employees(connection):
     list32.insert(tk.END, q)
 
 def manualAssign():
@@ -242,6 +246,8 @@ def manualAssign():
     listEmp = []
     for i in listIndex:
         listEmp.append(list32.get(i))
+    for i in listEmp:
+        connection.assignTask(connection, )
     list31.delete(0, tk.END)
     list32.delete(0, tk.END)
     for q in range(20):
