@@ -11,12 +11,4 @@ class Task:
         self.assignedNeeded = assignedNeeded
 
     def __str__ (self):
-        print ("Task: \n   Name:            ", self.name,
-                     "\n   Description:     ", self.description,
-                     "\n   Department:      ", self.department,
-                     "\n   Skill Set:       ", self.skillSet,
-                     "\n   Difficulty:      ", self.difficulty,
-                     "\n   Length:          ", self.length,
-                     "\n   Priority:        ", self.priority,
-                     "\n   Assigned:        ", self.assigned,
-               )
+        return "{}".format(self.name)
