@@ -21,7 +21,8 @@ class JobAssignment(object):
 		return 1 * matchDept + 1 * matchSkill + 1 * capacity
 		# weight1 * matchDept + weight2 * matchSkill + weight3 * capacity
 
-	def getAssignment(self, task: Task, employeeList: [], maxCapacity: int):
+	# assignment list for a single task
+	def singleTaskAssignment(self, task: Task, employeeList: [], maxCapacity = 1000):
 		availableEmployee = employeeList
 		PQ = PriorityQueue([])
 
@@ -40,5 +41,22 @@ class JobAssignment(object):
 			assignedEmployee.append(PQ.pop()[1])
 
 		return assignedEmployee
+
+	def getAssignment(self, taskList: [], employeeList: []):
+		queue = PriorityQueue([])
+
+		for task in taskList:
+			queue.add((-task.priority, task))
+
+		assignmentList = []
+
+		while (queue.size() > 0):
+			task = queue.pop()
+			assignment = singleTaskAssignment(task, employeeList)
+
+			for employee in assignment:
+				assignmentList.append((task, employee))
+
+		return assignmentList
 
 		
