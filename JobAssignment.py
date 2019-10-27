@@ -1,6 +1,6 @@
-import Employee
-import Task
-import PriorityQueue
+from Employee import Employee
+from Task import Task
+from PriorityQueue import PriorityQueue
 
 class JobAssignment(object):
 	# return # of matching entries between 2 lists
