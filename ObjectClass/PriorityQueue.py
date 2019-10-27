@@ -26,6 +26,9 @@ class PriorityQueue(object):
         self.heap = items
         heapq.heapify(self.heap)
 
+    def size(self):
+        return len(self.heap)
+
     def pop(self):
         """Remove and return the smallest item from the queue."""
         smallest = heapq.heappop(self.heap)
