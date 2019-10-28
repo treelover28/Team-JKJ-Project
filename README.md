@@ -1,5 +1,8 @@
 # Team-JKJ-Project
 # JKJ Task Manager
+## Link to video demonstration: 
+https://youtu.be/aVOJ1pk-xYg
+
 ## What problem does my app solve?
 Most entrepreneurs when starting their business usually face the difficulty of managing employees to make the business function properly. Specifically, startups usually have their employees with different skillsets working in multiple departments, and it is difficult to efficiently assign jobs to the correct employees, especially when the task requires a large number of skillsets and multiple employees to finish. <br />
 ## How does my app solve the problem?
