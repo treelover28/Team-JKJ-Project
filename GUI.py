@@ -291,13 +291,8 @@ def autoAssign():
     assignmentObject = JobAssignment()
     assignedList = assignmentObject.getAssignment(tasks, employees)
 
-    print(assignedList)
-
     for entry in assignedList:
         connection.assignTask(entry[1][2].firstName, entry[1][2].lastName, entry[0][1].name)
-    
-    for entry in assignedList:
-        print(entry)
 
     list41.delete(0, tk.END)
     for q in connection.get_all_tasks(threshold = 0, returnObject= True):

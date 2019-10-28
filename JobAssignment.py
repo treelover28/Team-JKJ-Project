@@ -26,7 +26,6 @@ class JobAssignment(object):
 		availableEmployee = employeeList
 		PQ = PriorityQueue([])
 
-		print(task)
 		it = 0
 
 		for employee in availableEmployee:
@@ -34,17 +33,18 @@ class JobAssignment(object):
 			matchSkill = self.compareList(employee.skillSet, task.skillSet)
 
 			if employee.capacity >= maxCapacity or matchDept == 0 or matchSkill == 0:
-				availableEmployee.remove(employee)
+				continue
 
 			evaluation = self.evaluation(matchDept, matchSkill, maxCapacity - employee.capacity)
 
-			PQ.add((evaluation, it, employee))
+			PQ.add((-evaluation, it, employee))
 			it = it + 1
 
 		assignedEmployee = []
 
 		for i in range(min(len(availableEmployee), task.assignedNeeded)):
-			assignedEmployee.append(PQ.pop())
+			employee = PQ.pop()
+			assignedEmployee.append(employee)
 
 		return assignedEmployee
 

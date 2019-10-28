@@ -105,7 +105,7 @@ class client(object):
             "priority" : task.priority,
             "num_assignees" : 0
         }
-
+        # print(task.assignedNeeded)
         r = requests.post(
             self.url_for("tasks"), 
             json.dumps(data), 
@@ -143,7 +143,7 @@ class client(object):
         i = self.db["tasks"].find_one(taskQuery)
         # print(result["_id"])
         if (returnObject is True):
-            task = Task(i["name"], i["department"],i["skillset"], i["difficulty"], i["length"], i["description"], i["priority"], i["num_assignees"])
+            task = Task(i["name"], i["department"],i["skillset"], i["difficulty"], i["length"], i["description"], i["priority"], i["assignee_needed"])
             return task
         else:
             return i
