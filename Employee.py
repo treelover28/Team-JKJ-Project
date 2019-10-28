@@ -9,3 +9,6 @@ class Employee(object):
 		self.department = department
 		self.skillSet = skillSet
 		self.capacity = capacity
+
+	def __str__(self):
+		return "{}, {}".format(self.lastName, self.firstName)

@@ -17,7 +17,7 @@ class JobAssignment(object):
 
 		return numMatched
 
-	def evaluation(self, matchDept: int, matchSkill: int, capacity: int):
+	def evaluation(self, matchDept: int, matchSkill: int, capacity: int)->float:
 		return 1 * matchDept + 1 * matchSkill + 1 * capacity
 		# weight1 * matchDept + weight2 * matchSkill + weight3 * capacity
 
@@ -26,6 +26,9 @@ class JobAssignment(object):
 		availableEmployee = employeeList
 		PQ = PriorityQueue([])
 
+		print(task)
+		it = 0
+
 		for employee in availableEmployee:
 			matchDept = self.compareList(employee.department, task.department)
 			matchSkill = self.compareList(employee.skillSet, task.skillSet)
@@ -33,12 +36,15 @@ class JobAssignment(object):
 			if employee.capacity >= maxCapacity or matchDept == 0 or matchSkill == 0:
 				availableEmployee.remove(employee)
 
-			PQ.add((self.evaluation(matchDept, matchSkill, maxCapacity - employee.capacity), employee))
+			evaluation = self.evaluation(matchDept, matchSkill, maxCapacity - employee.capacity)
+
+			PQ.add((evaluation, it, employee))
+			it = it + 1
 
 		assignedEmployee = []
 
-		for i in range(max(len(availableEmployee), task.assignedNeeded)):
-			assignedEmployee.append(PQ.pop()[1])
+		for i in range(min(len(availableEmployee), task.assignedNeeded)):
+			assignedEmployee.append(PQ.pop())
 
 		return assignedEmployee
 
@@ -52,7 +58,7 @@ class JobAssignment(object):
 
 		while (queue.size() > 0):
 			task = queue.pop()
-			assignment = self.singleTaskAssignment(task, employeeList)
+			assignment = self.singleTaskAssignment(task[1], employeeList)
 
 			for employee in assignment:
 				assignmentList.append((task, employee))

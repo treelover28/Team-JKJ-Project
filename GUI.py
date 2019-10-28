@@ -7,6 +7,7 @@ from Employee import Employee
 from settings import employees_schema
 from settings import tasks_schema
 from client import client
+from JobAssignment import JobAssignment
 
 connection = client()
 
@@ -98,9 +99,9 @@ def addEmp():
         listSkill.append(list2.get(i))
     cap = entry3.get()
     emp = Employee(empFName, empLName, listDep, listSkill, cap)
-    connection.post_employee(connection, emp)
+    connection.post_employee(emp)
     list32.delete(0, tk.END)
-    for q in connection.get_all_employees(connection):
+    for q in connection.get_all_employees(returnObject=True):
         list32.insert(tk.END, q)
     entry1.delete(0, tk.END)
     entry2.delete(0, tk.END)
@@ -190,12 +191,12 @@ def addTask():
     for i in listIndex:
         listSkill.append(list22.get(i))
     task = Task(taskName, listDep, listSkill, diff, l, descript, priority, empNeeded)
-    connection.post_tasks(connection,task)
+    connection.post_tasks(task)
     list31.delete(0, tk.END)
-    for q in connection.get_all_tasks(connection, 0):
+    for q in connection.get_all_tasks(threshold = 0, returnObject = True):
         list31.insert(tk.END, q)
     list41.delete(0,tk.END)
-    for q in connection.get_all_tasks(connection,0):
+    for q in connection.get_all_tasks(threshold = 0, returnObject= True):
         list41.insert(tk.END, q)
     entry21.delete(0, tk.END)
     entry24.delete(0, tk.END)
@@ -224,7 +225,7 @@ scroll31.place(x=335, y =45, height = 150, width =25)
 
 
 
-for q in connection.get_all_tasks(connection):
+for q in connection.get_all_tasks(threshold = 0, returnObject = True):
     list31.insert(tk.END, q)
 
 
@@ -236,7 +237,7 @@ list32.configure(yscrollcommand = scroll32.set)
 list32.place (x = 110, y = 200, height = 150, width = 250)
 scroll32.place(x=335, y =200, height = 150, width =25)
 
-for q in connection.get_all_employees(connection):
+for q in connection.get_all_employees(returnObject=True):
     list32.insert(tk.END, q)
 
 def manualAssign():
@@ -246,8 +247,8 @@ def manualAssign():
     listEmp = []
     for i in listIndex:
         listEmp.append(list32.get(i))
-    for i in listEmp:
-        connection.assignTask(connection, )
+    # for i in listEmp:
+    #     connection.assignTask(connection, )
     list31.delete(0, tk.END)
     list32.delete(0, tk.END)
     for q in range(20):
@@ -270,7 +271,7 @@ list41.configure(yscrollcommand = scroll41.set)
 list41.place (x = 110, y = 50, height = 175, width = 350)
 scroll41.place(x=435, y = 50, height = 175, width =25)
 
-for q in range(20):
+for q in connection.get_all_tasks(threshold = 0, returnObject= True):
     list41.insert(tk.END, q)
 
 def autoAssign():
@@ -278,9 +279,33 @@ def autoAssign():
     listTask = []
     for i in listIndex:
         listTask.append(list41.get(i))
+    
+    tasks = []
+
+    for taskName in listTask:
+        task = connection.selectTask(taskName, returnObject=True)
+        tasks.append(task)
+
+    employees = connection.get_all_employees(returnObject=True)
+
+    assignmentObject = JobAssignment()
+    assignedList = assignmentObject.getAssignment(tasks, employees)
+
+    print(assignedList)
+
+    for entry in assignedList:
+        connection.assignTask(entry[1][2].firstName, entry[1][2].lastName, entry[0][1].name)
+    
+    for entry in assignedList:
+        print(entry)
+
     list41.delete(0, tk.END)
-    for q in range(20):
+    for q in connection.get_all_tasks(threshold = 0, returnObject= True):
         list41.insert(tk.END, q)
+    
+    list51.delete(0, tk.END)
+    for q in connection.get_all_tasks(threshold = 0, returnObject= True, greaterThan=True):
+        list51.insert(tk.END, q)
     messagebox.showinfo("Message", "Task assigned")
 B4 = tk.Button(frameAssign, text ="Assign", command = autoAssign, font=("Roboto", 11))
 B4.place (x =200, y = 235, height = 40, width = 100)
@@ -298,7 +323,7 @@ list51.configure(yscrollcommand = scroll51.set)
 list51.place (x = 20, y = 50, height = 175, width = 310)
 scroll51.place(x= 305, y = 50, height = 175, width =25)
 
-for q in range(20):
+for q in connection.get_all_tasks(0, greaterThan=True, returnObject=True):
     list51.insert(tk.END, q)
 
 list52 = tk.Listbox (frameResult, font=("Roboto", 11), selectmode = tk.SINGLE,exportselection=0)
@@ -310,7 +335,8 @@ scroll52.place(x= 655, y = 50, height = 175, width =25)
 def seeAssigned():
     listIndex = list51.curselection()
     taskName = list51.get(listIndex[0])
-    for q in range(15):
+    list52.delete(0, tk.END)
+    for q in connection.get_tasks_assignees(taskName, returnName=True):
         list52.insert(tk.END, q)
 
 B5 = tk.Button(frameResult, text = "See Employees Assigned", command = seeAssigned, font=("Roboto", 11))
