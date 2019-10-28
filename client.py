@@ -100,10 +100,12 @@ class client(object):
             "difficulty" : task.difficulty,
             "length" : task.length,
             "description" : task.description,
-            "assignee_needed" : task.assignedNeeded
-            # list of active employees is empty by default
+            "assignee_needed" : task.assignedNeeded,
+            # list of active employees is empty by default :
+            "priority" : task.priority,
+            "num_assignees" : 0
         }
-
+        # print(task.assignedNeeded)
         r = requests.post(
             self.url_for("tasks"), 
             json.dumps(data), 
@@ -129,7 +131,7 @@ class client(object):
         # print(result["_id"])
         return result
 
-    def selectTask(self, taskName: str):
+    def selectTask(self, taskName: str, returnObject: bool = False):
         '''
         Query "tasks" endpoint to find task with matching name. \\
         Argument:
@@ -138,9 +140,13 @@ class client(object):
         return None if not found
         '''
         taskQuery = {"name" : taskName}
-        result = self.db["tasks"].find_one(taskQuery)
+        i = self.db["tasks"].find_one(taskQuery)
         # print(result["_id"])
-        return result 
+        if (returnObject is True):
+            task = Task(i["name"], i["department"],i["skillset"], i["difficulty"], i["length"], i["description"], i["priority"], i["assignee_needed"])
+            return task
+        else:
+            return i
 
     def assignTask(self,firstName: str, lastName: str, taskName: str):
         '''
@@ -229,7 +235,7 @@ class client(object):
             employeeList = res
         return employeeList
 
-    def get_all_employees(self, threshold: int = None, howMany : int = None):
+    def get_all_employees(self, threshold: int = None, howMany : int = None,returnObject : bool = False ):
         '''
         Return howMany employees whose capacity <= threshold. \\
         If no argument is provided, return list of all employees. \\
@@ -256,9 +262,17 @@ class client(object):
             temp = self.db["employees"].find({"capacity": {"$lte" : threshold}})
             for i in range(0, min(temp.count(),howMany)):
                 employeeList.append(temp[i])
-        return employeeList
+        
+        if (returnObject is True):
+            res = []
+            for i in employeeList:
+                e = Employee(i["firstName"], i["lastName"],i["department"], i["skillset"],i["capacity"])
+                res.append(e)
+            return res
+        else: 
+            return employeeList
 
-    def get_all_tasks(self,threshold: int = None, howMany : int = None):
+    def get_all_tasks(self,threshold: int = None, howMany : int = None, returnObject : bool = False, greaterThan: bool = False):
         '''
         Return howMany tasks where their number of assignees <= threshold. \\
         If no argument is provided, return list of all tasks. \\
@@ -274,7 +288,10 @@ class client(object):
             for i in range(0, temp.count()):
                 taskList.append(temp[i])
         elif (howMany is None):
-            temp = self.db["tasks"].find({"num_assignees": {"$lte" : threshold}})
+            if (greaterThan is True):
+                temp = self.db["tasks"].find({"num_assignees": {"$gt" : threshold}})
+            else:
+                temp = self.db["tasks"].find({"num_assignees": {"$lte" : threshold}})
             for i in range(0, temp.count()):
                 taskList.append(temp[i])
 
@@ -283,10 +300,21 @@ class client(object):
             for i in range(0, min(temp.count(), howMany)):
                 taskList.append(temp[i])
         else:
-            temp = self.db["tasks"].find({"num_assignees": {"$lte" : threshold}})
+            if (greaterThan is True):
+                temp = self.db["tasks"].find({"num_assignees": {"$gt" : threshold}})
+            else:
+                temp = self.db["tasks"].find({"num_assignees": {"$lte" : threshold}})
             for i in range(0, min(temp.count(),howMany)):
                 taskList.append(temp[i])
-        return taskList
+        
+        if (returnObject is True):
+            res = []
+            for i in taskList:
+                e = Task(i["name"], i["department"],i["skillset"], i["difficulty"], i["length"], i["description"], i["priority"], i["num_assignees"])
+                res.append(e)
+            return res # object
+        else:
+            return taskList # references id
 
 def main():
     connection = client()
@@ -299,7 +327,7 @@ def main():
     task1 = Task("Make GUI", ["IT"], ["Technology"],5,5,"Using something to make GUI lol",5,5)
     task2 = Task("Code Backend", ["IT"], ["Technology"],5,5,"Use Python Eve Framework and MongoDB",5,5)
     task3 = Task("Do Algorithms", ["IT"], ["Technology"],5,5,"Use his 200 IQ brain",5,5)
-    
+
     connection.post_employee(employee1)
     connection.post_employee(employee2)
     connection.post_employee(employee3)
@@ -318,7 +346,13 @@ def main():
     # print(get_tasks_assignees("Make GUI",True))
 
     # print(get_all_employees(howMany = 4))
-    pprint(connection.get_all_tasks(howMany = 4))
+    l = connection.get_all_employees()
+    for e in l:
+        print(e)
+    
+    l = connection.get_all_tasks()
+    for e in l:
+        print(e)
 
 
     # removeTask("Phong", "Pham", "Make GUI")
