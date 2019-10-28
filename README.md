@@ -1,5 +1,8 @@
 # Team-JKJ-Project
 # JKJ Task Manager
+
+![Screenshot from 2019-10-27 21-53-48](https://user-images.githubusercontent.com/50902696/67650919-68814b00-f904-11e9-8b89-30fd281f3a1d.png)
+
 ## Link to video demonstration: 
 https://youtu.be/aVOJ1pk-xYg
 
