@@ -12,6 +12,6 @@ Step 2: You have to install the Python modules:<br/>
 * requests
 * eve (Python Eve framework)
 * tkinter
-Step 3: Make sure you turn on mongoDB server first. On Windows, type on terminal <pre> mongod </pre> On Linux, type on terminal <pre> sudo mongod </pre>
+Step 3: Make sure you turn on mongoDB server first. On Windows, type on terminal <pre> mongod </pre> On Linux, type on terminal <pre> sudo mongod </pre> <br/>
 Step 4: Run jkjapp.py in terminal to turn on the app (It is expected to not open any windows. It just lets the app run in background)<br/>
 Step 5: Run GUI.py to access GUI.<br/>
